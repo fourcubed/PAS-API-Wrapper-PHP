@@ -1,0 +1,23 @@
+h1. PAS v3 API Wrapper Class for PHP
+
+h2. What this is
+
+This is a class written in PHP that is created to make it easier to remotely interact with the PAS system from other systems.  The class itself is in the /lib/ folder and contains two files described below.
+
+We will continue to update the API wrapper as we add additional functionality to the API - we'll also be adding additional updated examples to help you get started quickly, too.  If you have any requests for samples or functionality please let us know!
+
+h3. pas-api-wrapper.php
+
+This is the wrapper class for API interaction.  It actually contains two classes, a parent class called 'PAS_API' for handling basic interaction plus a child class called 'PAS_Member' which is used for interacting directly with Member queries and actions.  These are just examples meant to show you how to get started quickly - we definitely encourage you to make changes and additions to fit your needs!
+
+h3. curl.php
+
+This is a generic class to handle Curl HTTP requests and is what the API wrapper class uses for all of it's outgoing requests.
+
+h2. More Info
+
+"PAS v3 API: Intro":http://community.pokeraffiliatesolutions.com/site-administration/1615-pas-v3-api-beta-release.html#post7873
+"PAS v3 API: Getting Started":http://community.pokeraffiliatesolutions.com/site-administration/1616-pas-v3-api-usage-overview.html
+"PAS v3 API: Actions & Calls":http://community.pokeraffiliatesolutions.com/site-administration/1616-pas-v3-api-usage-overview.html#post7878
+"Documentation Home":http://www.pokeraffiliatesolutions.com/docs/
+"PokerAffiliateSolutions.com":http://www.pokeraffiliatesolutions.com/
