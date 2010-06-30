@@ -1,7 +1,6 @@
 <?php
-    // Require the PAS API Library & the Curl Library that it utilizes for sending requests
+    // Require the PAS API Library
     require('lib/pas-api-wrapper.php');
-    require('lib/curl.php');
     
     // Create a new PAS_Member Object
     $new_user = new PAS_Member();

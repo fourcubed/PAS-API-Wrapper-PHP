@@ -3,6 +3,8 @@
 class curl {
 
 	public static function sendRequest($url, $payload=null, $method=null, $custom_header=false, $port=false) { 
+	    
+	    //echo("\n".'Hitting URL: '.$url."\n\n");
 		// Init curl & set options
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -35,7 +37,8 @@ class curl {
 
 		// Send Request and return the result
 		$data = curl_exec($ch); curl_close($ch);
-		return $data;
+		echo("\nData:\n".$data."\n\n");		
+		//return $data;
 	}
 }
 

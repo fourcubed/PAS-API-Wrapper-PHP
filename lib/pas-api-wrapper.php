@@ -1,18 +1,24 @@
 <?php
 
+require_once('lib/curl.php');
+require_once('pas-api-member.php');
+require_once('pas-api-ticket.php');
+
 class PAS_API { 
 
 	const api_token     = 'YOUR_API_TOKEN';         // Your 'API Token' (provided by PAS) goes here.
 	const api_secret    = 'YOUR_API_ACCESS_KEY';    // Your 'API Access Key' (provided by PAS) goes here.
-	const url           = 'http://publisher.pokeraffiliatesolutions.com'; // Should not need to change this!
+	const url           = 'https://publisher.pokeraffiliatesolutions.com'; // Should not need to change this!
 
     // Method used to send ALL Requests.  Returns a SimpleXMLElement Object.
-    public static function sendRequest($path, $method='GET', $payload=null) { 
+    public static function sendRequest($path, $method='GET', $payload=null, $additional_get_params=null) { 
         // If called by a Child Class remove any stored errors
         if(isset($this)) { $this->errors = null; }
         
+        if($additional_get_params == null) { $add_params = ''; } else { $add_params = $additional_get_params; }
+        
         // Form the Full Request URL & Send the actual request!
-        $xml_from_pas = curl::sendRequest( self::url.$path.self::signRequest($method, $path) , $payload, $method);
+        $xml_from_pas = curl::sendRequest( self::url.$path.self::signRequest($method, $path).$add_params , $payload, $method);
 
         try { 
             $obj = new SimpleXMLElement( $xml_from_pas );
@@ -31,6 +37,19 @@ class PAS_API {
         }
         return false;
     }
+    
+    // Returns a simple associative array of Website Offers that are active / can be added
+    public static function getOffers($website_id) { 
+        $get_offers = PAS_API::sendRequest('/website_offers.xml', 'GET', null, '&website_id='.$website_id);
+        foreach($get_offers->offer as $offer) { 
+            unset($array);
+            foreach($offer as $k => $v) { 
+                $array[(string) $k] = trim((string) $v);
+            }
+            $return_array[(integer)$offer->id] = $array;
+        }
+        return $return_array;
+    }
 
     public function getErrors() {
         return $this->errors;
@@ -41,79 +60,6 @@ class PAS_API {
         $signature = '?api_token='.self::api_token.'&timestamp='.$timestamp.'&signature=' . urlencode( base64_encode( hash_hmac('sha1', self::api_token . $method . $path . $timestamp , self::api_secret, true)));
         return $signature;
     }
-}
-
-class PAS_Member extends PAS_API { 
-    protected $member_id = null;
-    protected $xml_obj;
-    protected $errors;
-    
-    public function __construct($member_id = null) { 
-        $this->member_id = $member_id;
-        
-        // Are we Viewing an existing Member or Creating a new one?
-        if($member_id != null) { 
-            $this->getMemberData();
-        } else { 
-            // We're going to CREATE a New User
-            $this->xml_obj = new SimpleXMLElement('<member></member>');
-        }
-    }
-    
-    public function __get($var) { 
-        return $this->xml_obj->$var;
-    }
-    
-    public function __set($var, $value) { 
-        $this->xml_obj->$var = $value;
-    }
-    
-    public function asXML() { 
-        return $this->xml_obj->asXML();
-    }
-    
-    public function save() { 
-        if($this->member_id != null) { 
-            return $this->updateMember();
-        } else { 
-            return $this->createMember();
-        }
-    }
-    
-    public function getMemberTrackers() { 
-        foreach($this->xml_obj->member_trackers->member_tracker as $tracker_data) { 
-            $x++;
-            foreach($tracker_data as $k => $v) { $all_trackers[$x][$k] = (string) $v; }
-        }
-        return $all_trackers;
-    }
-    
-	public function getRemoteAuthToken() { 
-	    $get = $this->sendRequest('/remote_auth.xml', 'POST', '<member_id>'.$this->member_id.'</member_id>');
-	    return (string) $get[0];
-	}
-    
-    private function getMemberData() { 
-	    $this->xml_obj = $this->sendRequest('/publisher_members/'.$this->member_id.'.xml');
-        if(parent::hasErrors($this->xml_obj)) { 
-            return false;
-        } return true;
-	}
-	
-	private function updateMember() { 
-	    $update = $this->sendRequest('/publisher_members/'.$this->member_id.'.xml', 'PUT', $this->asXML());
-        if(parent::hasErrors($update)) { 
-            return false;
-        } return true;
-	}
-	
-	private function createMember() { 
-	    //var_dump($this->asXML());
-	    $create = $this->sendRequest('/publisher_members.xml', 'POST', $this->asXML());
-	    if(parent::hasErrors($create)) { 
-            return false;
-        } return true;
-	}    
 }
 
 ?>
