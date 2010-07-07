@@ -1,6 +1,6 @@
 <?php
 
-require_once('lib/curl.php');
+require_once('curl.php');
 require_once('pas-api-member.php');
 require_once('pas-api-ticket.php');
 
