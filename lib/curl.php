@@ -37,8 +37,8 @@ class curl {
 
 		// Send Request and return the result
 		$data = curl_exec($ch); curl_close($ch);
-		echo("\nData:\n".$data."\n\n");		
-		//return $data;
+		//echo("\nData:\n".$data."\n\n");		
+		return $data;
 	}
 }
 

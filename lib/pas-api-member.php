@@ -1,7 +1,5 @@
 <?php
 
-
-
 class PAS_Member extends PAS_API { 
     protected $member_id = null;
     protected $xml_obj;
@@ -170,4 +168,3 @@ class PAS_Member extends PAS_API {
 }
 
 ?>
-
