@@ -81,6 +81,39 @@ class PAS_Member extends PAS_API {
 	    $stats = $this->sendRequest('/publisher_members/'.$this->member_id.'/stats.xml', 'GET', null, $add_params);
 	    return $stats;
     }
+
+    // Dates should be in this format: 'YYYY-MM-DD'.  
+/////     NOTE: This method is currently limited to 1 month.  Any longer will likely timeout!
+	public function getMemberStatsByDay($start_date, $end_date) { 
+		// Validate Dates
+		$ts_start = PAS_API::date2timestamp($start_date);
+		$ts_end = PAS_API::date2timestamp($end_date);
+		if(date('m', $ts_start) != date('m', $ts_end) || date('Y', $ts_start) != date('Y', $ts_end)) { 
+			return false; // Our dates eclipsed 1 month or 1 year --> Would TIMEOUT if run, send FALSE!
+		}
+		
+		// Are we working within this month?
+		if(date('Ym') == date('Ym', $ts_start)) { 
+			// We are --> We ONLY need to request up to today (yesterday, really, but we'll do today for completeness)
+			$ts_end = PAS_API::date2timestamp(date('Y-m-d'));
+		}
+		
+		// Now, lets go ahead & loop through each day!
+		$current_time = $ts_start;
+		while($current_time <= $ts_end) {
+			$add_params = '&start_date='.date('Y-m-d',$current_time).'&end_date='.date('Y-m-d',$current_time);
+	    	$stats = $this->sendRequest('/publisher_members/'.$this->member_id.'/stats.xml', 'GET', null, $add_params);
+
+			// Build an array of Daily Stats for later return.
+			$daily_stats_array[date('Y-m-d',$current_time)] = $stats;
+			
+			// On the next iteration, get `tomorrow`!
+			$current_time += 86400;
+		}
+
+		// Return the Daily Stats!
+	    return $daily_stats_array;
+	}
     
     // Dates should be in this format: 'YYYY-MM-DD'
     public function getMemberRAFStats($start_date=null, $end_date=null) { 

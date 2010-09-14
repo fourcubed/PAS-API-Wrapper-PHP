@@ -16,7 +16,9 @@
     // Fetching Referral Data can be done, too:
     $m->getMemberRAFStats('2010-04-01', '2010-05-21');      // The returned data is grouped by referred Member
     
-    
+    // We can even get Daily Member Stats (if we're patient!).
+	$daily_stats = $m->getMemberStatsByDay('2010-07-01', '2010-07-31');
+	
     //////////////////////////////////////////////
     ///////////// PAYMENTS ///////////////////////
     

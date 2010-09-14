@@ -60,6 +60,12 @@ class PAS_API {
         $signature = '?api_token='.self::api_token.'&timestamp='.$timestamp.'&signature=' . urlencode( base64_encode( hash_hmac('sha1', self::api_token . $method . $path . $timestamp , self::api_secret, true)));
         return $signature;
     }
+
+	// This really belongs in a 'Utilities' Class, but adding it here to save time!  :)
+	public static function date2timestamp($date) {
+		$date = str_replace('-','',$date);
+		return mktime(0,0,0, substr($date,4,2), substr($date,6,2), substr($date,0,4));
+	}
 }
 
 ?>
