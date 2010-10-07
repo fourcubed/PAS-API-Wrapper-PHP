@@ -14,6 +14,28 @@ h3. curl.php
 
 This is a generic class to handle Curl HTTP requests and is what the API wrapper class uses for all of it's outgoing requests.
 
+h2. Bonus - Ruby Method to Sign Requests
+
+Below is a Ruby method that will allow you to easily sign your API requests.  This code is identical in function to the PHP example shown on the Docs page.
+
+<pre>
+<code>
+require 'base64'
+require 'openssl'
+require 'cgi'
+
+def createSignature(api_access_key, api_token, request_method, request_path, timestamp)
+  data = api_token + request_method.to_s + request_path.to_s + timestamp.to_s
+  signature = OpenSSL::HMAC.digest(OpenSSL::Digest::SHA1.new, api_access_key, data)
+  CGI::escape(Base64.encode64(signature).chomp)
+end
+
+sig = createSignature('BaEc8f13QlXgjQd4fBQ', '143aec8f13dfcc6cb364e6a9c9ff4bb0', 'GET', '/publisher_members/404043.xml', '1276980199')
+
+puts sig
+</code>
+</pre>
+
 h2. More Info
 
 "PAS v3 API: Intro":http://community.pokeraffiliatesolutions.com/site-administration/1615-pas-v3-api-beta-release.html#post7873
