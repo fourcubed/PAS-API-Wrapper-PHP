@@ -64,7 +64,7 @@ class PAS_API {
 	// This really belongs in a 'Utilities' Class, but adding it here to save time!  :)
 	public static function date2timestamp($date) {
 		$date = str_replace('-','',$date);
-		return mktime(0,0,0, substr($date,4,2), substr($date,6,2), substr($date,0,4));
+		return mktime(1,1,1, substr($date,4,2), substr($date,6,2), substr($date,0,4));
 	}
 }
 
