@@ -50,6 +50,18 @@ class PAS_API {
         }
         return $return_array;
     }
+    
+    public static function getMembers($website_id) {
+      $get_members = PAS_API::sendRequest('/publisher_members.xml', 'GET', null, '&website_id='.$website_id);
+      foreach($get_members->member as $member) {
+        unset($array);
+        foreach($member as $attr => $value) {
+          $array[(string) $attr] = trim((string) $value);
+        }
+        $return_array[(integer)$member->id] = $array;
+      }
+      return $return_array;
+    }
 
     public function getErrors() {
         return $this->errors;
