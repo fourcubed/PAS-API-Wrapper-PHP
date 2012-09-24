@@ -51,8 +51,12 @@ class PAS_API {
         return $return_array;
     }
     
-    public static function getMembers($website_id) {
-      $get_members = PAS_API::sendRequest('/publisher_members.xml', 'GET', null, '&website_id='.$website_id);
+    // Returns at most 40 members, use $page for offset
+    public static function getMembers($website_id = null, $page = 1) {
+      $search = '&search[website_id_is]='.$website_id;
+      $search .= '&page='.$page;
+      
+      $get_members = PAS_API::sendRequest('/publisher_members.xml', 'GET', null, $search);
       foreach($get_members->member as $member) {
         unset($array);
         foreach($member as $attr => $value) {

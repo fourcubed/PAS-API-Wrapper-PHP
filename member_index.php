@@ -4,8 +4,11 @@
 
 	$api = new PAS_API();
 	
-	// Fetch a list of ALL members for a given website
-	$members = $api->getMembers(YOUR_WEBSITE_ID);
-	
-	print_r($members);	
+	// Fetch a list of ALL members
+	$page = 1;
+	do {
+	  $members = $api->getMembers(null, $page);
+	  echo "Found " . count($members) . " members\n";
+	  $page += 1;
+	} while (count($members) > 0);
 ?>
