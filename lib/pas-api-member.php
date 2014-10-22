@@ -47,6 +47,11 @@ class PAS_Member extends PAS_API {
         }
     }
     
+    public function authenticate($password) {
+      $response = $this->sendRequest('/publisher_members/'.$this->member_id.'/authenticate.xml', 'POST', '<password>' . htmlentities($password) . '</password>');
+      return !parent::hasErrors($response);
+    }
+    
     public function getMemberTrackers() { 
         foreach($this->xml_obj->member_trackers->member_tracker as $tracker_data) { 
             $x++;

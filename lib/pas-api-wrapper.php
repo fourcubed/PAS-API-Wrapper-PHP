@@ -28,6 +28,7 @@ class PAS_API {
     }
     
     public function hasErrors(&$xml_object) { 
+        $error_array = array();
         foreach($xml_object->error as $error) { 
             $error_array[] = (string) $error;
         }
