@@ -6,7 +6,7 @@ class PAS_Member extends PAS_API {
     protected $errors;
     
     public static function getMemberByLogin($login) { 
-        $find = parent::sendRequest('/publisher_members.xml', 'GET', null, '&search[order]=&criteria_0=login&operator_0=equals&query_0='.$login);
+        $find = parent::sendRequest('/publisher_members.xml', 'GET', null, '&search[order]=&criteria_0=login&operator_0=equals&query_0='.urlencode($login));
         if($find['total_entries'] == 1) { 
             $member = new PAS_Member( (string) $find->member->id );
             return $member;
